@@ -8,7 +8,7 @@
   "linter": {
     "rules": {
       "preset": "recommended",
-      "style": { "noNonNullAssertion": "off", "noParameterAssign": "off" },
+      "style": { "noNonNullAssertion": "off", "noParameterAssign": "off", "noDescendingSpecificity": "off" },
       "suspicious": { "noExplicitAny": "off" }
     }
   }

@@ -43,8 +43,9 @@ export function defaultShow(): Show {
     version: 1,
     master: { brightness: 1, blackout: false, strobe: 0, hue: 0 },
     decks: [
-      { scene: 'raze', params: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5] },
-      { scene: 'scan', params: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5] },
+      // the scenes' own defaults (src/scenes), written out so core stays independent of the GL code
+      { scene: 'raze', params: [0.55, 0.4, 0.5, 0.15, 0.5, 0.5, 0.5, 0.5] },
+      { scene: 'scan', params: [0.35, 0.2, 0.4, 0.3, 0.5, 0.5, 0.5, 0.5] },
     ],
     crossfade: 0,
     palette: [

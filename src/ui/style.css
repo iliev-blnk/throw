@@ -1,0 +1,305 @@
+:root {
+  --bg: #0b0b0c;
+  --panel: #121214;
+  --fg: #e6e4e0;
+  --dim: #8b8a87;
+  --line: #2a2a2d;
+  --on: #ffb020;
+  --alarm: #ff4a3d;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font:
+    13px / 1.45 "IBM Plex Mono",
+    ui-monospace,
+    monospace;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 4px 9px;
+  cursor: pointer;
+}
+button:hover {
+  border-color: var(--dim);
+}
+button.on {
+  border-color: var(--on);
+  color: var(--on);
+}
+button.blackout.on {
+  background: var(--alarm);
+  border-color: var(--alarm);
+  color: #000;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 3px 6px;
+  width: 100%;
+}
+input[type="number"] {
+  width: 6.5em;
+}
+input[type="file"] {
+  max-width: 100%;
+  color: var(--dim);
+}
+input[type="range"] {
+  accent-color: var(--on);
+  width: 100%;
+}
+
+h2,
+h3 {
+  font-size: 13px;
+  font-weight: 600;
+  margin: 14px 0 6px;
+}
+h2:first-child,
+h3:first-child {
+  margin-top: 0;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 2;
+}
+header .beats {
+  display: flex;
+  gap: 4px;
+}
+header .beats i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--line);
+}
+header .beats i.on {
+  background: var(--on);
+}
+header .server {
+  margin-left: auto;
+  color: var(--dim);
+}
+
+main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr);
+  gap: 14px;
+  padding: 14px;
+}
+@media (max-width: 900px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.preview {
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border: 1px solid var(--line);
+  position: relative;
+}
+.preview canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.master {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+  gap: 12px;
+  align-items: end;
+  margin: 12px 0;
+}
+@media (max-width: 700px) {
+  .master {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.slider {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 6px;
+}
+.slider .name {
+  grid-column: 1 / -1;
+  color: var(--dim);
+}
+.slider .val {
+  color: var(--dim);
+  min-width: 3.5em;
+  text-align: right;
+}
+
+.decks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 700px) {
+  .decks {
+    grid-template-columns: 1fr;
+  }
+}
+.deck {
+  border: 1px solid var(--line);
+  padding: 10px;
+  background: var(--panel);
+}
+.scenes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+.params {
+  display: grid;
+  gap: 6px;
+}
+.extras {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.field {
+  display: grid;
+  gap: 3px;
+}
+.field .name {
+  color: var(--dim);
+}
+.field.inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.check {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+aside {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  min-width: 0;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--line);
+}
+.tabs button {
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
+  padding: 7px 11px;
+}
+.tabs button.on {
+  color: var(--on);
+}
+.tabbody {
+  padding: 12px;
+}
+.panel {
+  display: grid;
+  gap: 10px;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.status {
+  color: var(--dim);
+  margin: 0;
+}
+.status.warn {
+  color: var(--on);
+}
+.status.err {
+  color: var(--alarm);
+}
+
+.meters {
+  display: grid;
+  gap: 4px;
+}
+.meter {
+  display: grid;
+  grid-template-columns: 4em 1fr;
+  align-items: center;
+  gap: 6px;
+  color: var(--dim);
+}
+.meter b {
+  height: 6px;
+  background: var(--line);
+  display: block;
+}
+.meter i {
+  display: block;
+  height: 100%;
+  background: var(--on);
+  width: 0;
+}
+.onset {
+  color: var(--line);
+}
+.onset.on {
+  color: var(--on);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+td,
+th {
+  border-bottom: 1px solid var(--line);
+  padding: 4px 6px;
+  text-align: left;
+  font-weight: 400;
+}
+th {
+  color: var(--dim);
+}

@@ -76,3 +76,12 @@ describe('show', () => {
     expect(r.ok && r.show.looks).toHaveLength(16)
   })
 })
+
+import { defaultParams } from '../../src/scenes/index'
+
+describe('default show', () => {
+  it('starts each deck on its scene defaults', () => {
+    const s = defaultShow()
+    for (const d of s.decks) expect(d.params).toEqual(defaultParams(d.scene))
+  })
+})
