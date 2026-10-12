@@ -6,7 +6,7 @@ void main() { vUV = aPos * 0.5 + 0.5; gl_Position = vec4(aPos, 0.0, 1.0); }`
 
 export type Program = { prog: WebGLProgram; u: (name: string) => WebGLUniformLocation | null }
 
-export function compile(gl: WebGL2RenderingContext, frag: string, label: string): Program {
+export function compile(gl: WebGL2RenderingContext, frag: string, label: string, vert = VERT): Program {
   const shader = (type: number, src: string) => {
     const s = gl.createShader(type)!
     gl.shaderSource(s, src)
@@ -17,7 +17,7 @@ export function compile(gl: WebGL2RenderingContext, frag: string, label: string)
     return s
   }
   const prog = gl.createProgram()!
-  gl.attachShader(prog, shader(gl.VERTEX_SHADER, VERT))
+  gl.attachShader(prog, shader(gl.VERTEX_SHADER, vert))
   gl.attachShader(prog, shader(gl.FRAGMENT_SHADER, frag))
   gl.bindAttribLocation(prog, 0, 'aPos')
   gl.linkProgram(prog)

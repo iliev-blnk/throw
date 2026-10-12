@@ -142,7 +142,7 @@ export function createRuntime(store: Store, engine: Engine, bus: ReturnType<type
       for (const h of r.frameHooks) h()
       return live
     },
-    render(view: 'program' = 'program') {
+    render(view: 'program' | 'none' = 'program') {
       engine.frame({
         show: store.get(),
         look: r.look,

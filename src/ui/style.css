@@ -374,3 +374,6 @@ th {
 .slot.empty {
   color: var(--dim);
 }
+.views {
+  margin-bottom: 6px;
+}

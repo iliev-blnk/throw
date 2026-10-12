@@ -19,7 +19,8 @@ export type FrameInput = {
   /** bass, mid, high, level, 0..1 */
   bands: [number, number, number, number]
   pulse: number
-  view: 'program' | 'output'
+  /** program: letterboxed program on the canvas; output: mapped surfaces; none: only render the program */
+  view: 'program' | 'output' | 'none'
   outputId?: string
   /** surface ids to outline (edit mode) */
   highlight?: string[]
@@ -29,6 +30,8 @@ export type Engine = {
   frame(f: FrameInput): void
   /** program colour under (x, y) in y-down uv, from a 64×36 readback (operator only) */
   readPixel(x: number, y: number): Rgb
+  /** average colour of the whole program (from the same readback) */
+  average(): Rgb
   setMedia(deck: 0 | 1, el: HTMLVideoElement | HTMLImageElement | null): void
   setLogo(img: HTMLImageElement | null): void
   /** the program texture, for previs in the same context */
@@ -37,6 +40,8 @@ export type Engine = {
   contextOk(): boolean
   /** current deck render scale (adaptive) */
   scale(): number
+  /** called after a lost context comes back, for code that shares the context */
+  onRestore(h: () => void): void
   dispose(): void
 }
 
@@ -115,7 +120,7 @@ type Resources = {
   logo: WebGLTexture
 }
 
-export function createEngine(canvas: HTMLCanvasElement, opts: { role: Role }): Engine {
+export function createEngine(canvas: HTMLCanvasElement, opts: { role: Role; readback?: boolean }): Engine {
   const gl = canvas.getContext('webgl2', {
     antialias: false,
     alpha: false,
@@ -178,7 +183,9 @@ export function createEngine(canvas: HTMLCanvasElement, opts: { role: Role }): E
   const onRestored = () => {
     res = init()
     lost = false
+    for (const h of restoreHooks) h()
   }
+  const restoreHooks = new Set<() => void>()
   canvas.addEventListener('webglcontextlost', onLost)
   canvas.addEventListener('webglcontextrestored', onRestored)
   res = init()
@@ -395,14 +402,15 @@ export function createEngine(canvas: HTMLCanvasElement, opts: { role: Role }): E
       gl.bindVertexArray(res.vao)
       sizeTargets(res, f.show)
       renderProgram(res, f)
-      if (opts.role === 'operator') {
+      if (opts.role === 'operator' || opts.readback) {
         blit(res, res.program.tex, res.read.fb, READ_W, READ_H, [0, 0, 1, 1])
         gl.readPixels(0, 0, READ_W, READ_H, gl.RGBA, gl.UNSIGNED_BYTE, readback)
       }
       if (f.view === 'output') renderOutput(res, f)
-      else renderView(res)
+      else if (f.view === 'program') renderView(res)
     },
     readPixel: (x, y) => averageRect(readback, READ_W, READ_H, x, y, 1 / READ_W),
+    average: () => averageRect(readback, READ_W, READ_H, 0.5, 0.5, 0.5),
     setMedia(deck, el) {
       mediaEls[deck] = el
       mediaAspect[deck] = 0
@@ -420,6 +428,9 @@ export function createEngine(canvas: HTMLCanvasElement, opts: { role: Role }): E
     programTexture: () => res!.program.tex,
     contextOk: () => !lost && !!res && !gl.isContextLost(),
     scale: () => scale,
+    onRestore: (h) => {
+      restoreHooks.add(h)
+    },
     dispose() {
       canvas.removeEventListener('webglcontextlost', onLost)
       canvas.removeEventListener('webglcontextrestored', onRestored)

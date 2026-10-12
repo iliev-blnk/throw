@@ -2,6 +2,7 @@ import '../../web/fonts/fonts.css'
 import './style.css'
 import { defaultShow } from '../core/show'
 import { createEngine } from '../gl/engine'
+import { beamFor, createPrevis } from '../gl/previs'
 import { createBus } from '../link/bus'
 import { canvasStats } from './debug'
 import { clear, h } from './h'
@@ -26,6 +27,9 @@ const bus = createBus()
 const canvas = h('canvas', { id: 'program' })
 const engine = createEngine(canvas, { role: 'operator' })
 const rt = createRuntime(store, engine, bus)
+const previs = createPrevis(engine.gl)
+engine.onRestore(() => previs.restore())
+let view: 'program' | 'previs' = 'program'
 const lights = createLights(store, engine, rt)
 let remote: Awaited<ReturnType<typeof startRemote>> | undefined
 void startRemote(store, rt).then((r) => {
@@ -83,6 +87,17 @@ store.on((show) => {
 const beatDots = [0, 1, 2, 3].map(() => h('i'))
 const bpmLabel = h('span', { class: 'bpm' })
 const serverLabel = h('span', { class: 'server' })
+const viewButtons = (['program', 'previs'] as const).map((v) =>
+  h('button', {
+    text: v,
+    'data-view': v,
+    class: v === view ? 'on' : '',
+    onclick: () => {
+      view = v
+      for (const b of viewButtons) b.classList.toggle('on', b.dataset.view === v)
+    },
+  }),
+)
 const decks = decksPanel(store, media)
 const master = masterPanel(store, () => rt.toggleBlackout())
 const audio = audioPanel(rt)
@@ -133,7 +148,14 @@ document.body.append(
   h(
     'main',
     {},
-    h('section', { class: 'stage' }, h('div', { class: 'preview' }, canvas), master.el, decks.el),
+    h(
+      'section',
+      { class: 'stage' },
+      h('div', { class: 'row views' }, ...viewButtons),
+      h('div', { class: 'preview' }, canvas),
+      master.el,
+      decks.el,
+    ),
     h('aside', {}, tabBar, tabBody),
   ),
 )
@@ -176,8 +198,26 @@ function frame() {
   rt.state.edit = null // the outputs tab sets it again while it is open
   tabs.find((t) => t.id === current)?.frame?.()
   rt.step()
-  rt.render()
-  lights.frame()
+  if (view === 'previs') {
+    rt.render('none')
+    lights.frame()
+    previs.frame({
+      program: engine.programTexture(),
+      show: store.get(),
+      avg: engine.average(),
+      beams: store.get().fixtures.flatMap((f) => {
+        const v = lights.values(f.id)
+        const b = v && beamFor(f, v)
+        return b ? [b] : []
+      }),
+      camera: { yaw: 0.35 * Math.sin(rt.state.t * 0.06), pitch: 0.14, dist: 8.6 },
+      width: canvas.width,
+      height: canvas.height,
+    })
+  } else {
+    rt.render()
+    lights.frame()
+  }
   serverLabel.textContent = {
     checking: '',
     none: 'no server',
