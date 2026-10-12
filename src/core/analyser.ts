@@ -45,7 +45,8 @@ export function createAnalyser(sampleRate: number): Analyser {
 
       let fl = 0
       for (let k = 0; k < half; k++) {
-        const m = Math.log1p(100 * Math.hypot(re[k], im[k]))
+        // linear magnitude: a log scale lets the broadband smear of a sound stopping dead outweigh the attack
+        const m = Math.hypot(re[k], im[k])
         const d = m - prev[k]
         if (d > 0) fl += d
         prev[k] = m
