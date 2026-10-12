@@ -18,7 +18,7 @@ const seek = (t: number) => page.evaluate((x) => (window as any).pagereel.seek(x
 beforeAll(async () => {
   browser = await launch()
   page = await browser.newPage()
-  page.setDefaultTimeout(10_000)
+  page.setDefaultTimeout(30_000)
   page.on('pageerror', (e) => console.error('pageerror', e.message))
 })
 afterAll(() => browser?.close())

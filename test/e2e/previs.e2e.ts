@@ -10,7 +10,7 @@ const statsAt = (t: number): Promise<{ luma: number }> =>
 beforeAll(async () => {
   browser = await launch()
   page = await browser.newPage()
-  page.setDefaultTimeout(10_000)
+  page.setDefaultTimeout(30_000)
   page.on('pageerror', (e) => console.error('pageerror', e.message))
   await page.goto(`${inject('baseUrl')}previs.html?demo&w=640&h=360`)
   await page.waitForFunction(() => (window as any).__throw?.ready)

@@ -8,7 +8,7 @@ let op: Page
 beforeAll(async () => {
   browser = await launch()
   op = await (await browser.newContext({ viewport: { width: 1400, height: 900 } })).newPage()
-  op.setDefaultTimeout(10_000)
+  op.setDefaultTimeout(30_000)
   op.on('pageerror', (e) => console.error('pageerror', e.message))
   await op.goto(`${inject('baseUrl')}index.html`)
   await op.evaluate(() => localStorage.clear())

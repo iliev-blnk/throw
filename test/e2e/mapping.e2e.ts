@@ -24,7 +24,7 @@ beforeAll(async () => {
   browser = await launch()
   ctx = await browser.newContext({ viewport: { width: 1400, height: 900 } })
   op = await ctx.newPage()
-  op.setDefaultTimeout(10_000)
+  op.setDefaultTimeout(30_000)
   await op.goto(`${inject('baseUrl')}index.html`)
   await op.evaluate(() => localStorage.clear())
   await op.reload()

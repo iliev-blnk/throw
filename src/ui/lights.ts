@@ -31,6 +31,8 @@ export function createLights(store: Store, engine: Engine, rt: Runtime) {
   let checked = false
   let universes = new Map<number, Uint8Array>()
   const values = new Map<string, Record<string, number>>()
+  // after a panic every channel stays at zero (movers too) until blackout is lifted
+  let held = false
 
   void (async () => {
     info = await health()
@@ -44,6 +46,7 @@ export function createLights(store: Store, engine: Engine, rt: Runtime) {
     }, 3000)
   })()
 
+  const zeros = (fs: Fixture[]) => new Map(fs.map((f) => [f.universe, new Uint8Array(512)]))
   const groups = (fs: Fixture[]) => {
     const g = new Map<string, Fixture[]>()
     for (const f of fs) g.set(f.group, [...(g.get(f.group) ?? []), f])
@@ -53,6 +56,12 @@ export function createLights(store: Store, engine: Engine, rt: Runtime) {
   return {
     frame() {
       const show = store.get()
+      if (held && show.master.blackout) {
+        universes = zeros(show.fixtures)
+        client?.send(universes)
+        return
+      }
+      held = false
       if (!show.fixtures.length) {
         universes = new Map()
         values.clear()
@@ -79,10 +88,9 @@ export function createLights(store: Store, engine: Engine, rt: Runtime) {
     },
     /** zeros on every patched universe, sent at once */
     panic() {
-      const zero = new Map<number, Uint8Array>()
-      for (const f of store.get().fixtures) zero.set(f.universe, new Uint8Array(512))
-      universes = zero
-      client?.sendNow(zero)
+      held = true
+      universes = zeros(store.get().fixtures)
+      client?.sendNow(universes)
     },
     universes: () => universes,
     values: (id: string) => values.get(id),

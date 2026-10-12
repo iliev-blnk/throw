@@ -377,3 +377,12 @@ th {
 .views {
   margin-bottom: 6px;
 }
+input[type="file"]::file-selector-button {
+  background: var(--panel);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 4px 9px;
+  margin-right: 8px;
+  cursor: pointer;
+}

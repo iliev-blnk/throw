@@ -15,6 +15,7 @@ import { looksPanel } from './panels/looks'
 import { mappingPanel, updateSurface } from './panels/mapping'
 import { masterPanel } from './panels/master'
 import { remotePanel } from './panels/remote'
+import { showPanel } from './panels/show'
 import { toolsPanel } from './panels/tools'
 import { startRemote } from './remote'
 import { createRuntime } from './runtime'
@@ -103,12 +104,14 @@ const master = masterPanel(store, () => rt.toggleBlackout())
 const audio = audioPanel(rt)
 
 const mapping = mappingPanel(store, rt)
+const showTabPanel = showPanel(store, canvas, () => rt.panic())
 const tabs: Tab[] = [
   { id: 'audio', label: 'audio', el: audio.el, frame: audio.frame },
   { id: 'outputs', label: 'outputs', el: mapping.el, frame: mapping.frame },
   { id: 'looks', label: 'looks', ...looksPanel(store, rt) },
   { id: 'lights', label: 'lights', ...lightsPanel(store, lights) },
   { id: 'remote', label: 'remote', ...remotePanel(() => remote) },
+  { id: 'show', label: 'show', el: showTabPanel.el, frame: showTabPanel.frame },
   { id: 'tools', label: 'tools', el: toolsPanel() },
 ]
 const tabBar = h('nav', { class: 'tabs' })
@@ -144,6 +147,7 @@ document.body.append(
     h('button', { text: 'tap', onclick: () => rt.tap() }),
     h('button', { text: 'beat 1', onclick: () => rt.resync() }),
     serverLabel,
+    h('button', { class: 'blackout on', text: 'panic', title: 'Esc', onclick: () => rt.panic() }),
   ),
   h(
     'main',
@@ -163,6 +167,7 @@ document.body.append(
 store.on(() => {
   decks.sync()
   master.sync()
+  showTabPanel.sync()
 })
 
 // ── keys ────────────────────────────────────────────────
