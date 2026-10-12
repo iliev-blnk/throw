@@ -24,6 +24,9 @@ importers:
       '@types/ws':
         specifier: ^8.18.2
         version: 8.18.2
+      pagereel:
+        specifier: 0.1.1
+        version: 0.1.1
       playwright-core:
         specifier: ^1.64.0
         version: 1.64.0
@@ -488,6 +491,11 @@ packages:
       '@vercel/functions':
         optional: true
 
+  pagereel@0.1.1:
+    resolution: {integrity: sha512-0wqGg4aSpAscmyU1mTdwIGDVmF9VNR/eBHMqCHfqYY6kb8Usw0QDOLqAvP8WGZPOnHUdzriffPMOxpJEs9y/VQ==}
+    engines: {node: '>=20'}
+    hasBin: true
+
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
@@ -899,6 +907,10 @@ snapshots:
   obug@2.2.1: {}
 
   pagepad@0.1.0: {}
+
+  pagereel@0.1.1:
+    dependencies:
+      playwright-core: 1.64.0
 
   picocolors@1.1.1: {}
 

@@ -1,5 +1,6 @@
 // The demo show used by previs.html?demo, the README video and the showcase: four surfaces
 // (wall + three boxes), four moving heads, four floor pars and a set of looks for autopilot.
+import { beginTransition, sample } from '../core/looks'
 import { defaultOutput, defaultShow } from '../core/show'
 import type { Fixture, Look, Show } from '../core/types'
 import { defaultParams } from '../scenes/index'
@@ -105,4 +106,17 @@ export function syntheticBands(beat: number): { bands: [number, number, number, 
   const kick = Math.exp(-ph * 7)
   const hat = Math.exp(-Math.abs(ph - 0.5) * 18)
   return { bands: [kick, 0.35 + 0.25 * Math.sin(beat * 0.7), 0.3 + 0.6 * hat, 0.4 + 0.5 * kick], pulse: kick }
+}
+
+export const DEMO_BPM = 124
+const LOOK_BEATS = 16
+
+/** Demo looks change every 16 beats with a 4-beat transition: a pure function of the beat. */
+export function demoLook(show: Show, beat: number): Look {
+  const looks = show.looks.filter((l): l is Look => !!l)
+  const k = Math.floor(beat / LOOK_BEATS)
+  const from = looks[(k + looks.length - 1) % looks.length]
+  const to = looks[k % looks.length]
+  const base = { ...show, decks: from.decks, crossfade: from.crossfade, palette: from.palette }
+  return sample(beginTransition(base, to, k * LOOK_BEATS, 4), beat)
 }

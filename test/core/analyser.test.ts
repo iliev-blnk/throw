@@ -68,6 +68,35 @@ describe('analyser', () => {
     expect(onsets.filter((o) => o >= 1).length).toBeLessThanOrEqual(15)
   })
 
+  it('puts the onsets on the kicks, not on louder off-beat hats', () => {
+    // seeded noise, high-passed by a first difference like a drum machine hat
+    let seed = 1
+    const white = () => {
+      seed = (seed * 1664525 + 1013904223) >>> 0
+      return seed / 2 ** 31 - 1
+    }
+    const hatAt = new Map<number, number>()
+    const beat = 0.5
+    const kick = clicks(120)
+    const signal = (t: number) => {
+      const p = (t + beat / 2) % beat // hats half a beat after each kick
+      const i = Math.round(t * SR)
+      if (!hatAt.has(i)) hatAt.set(i, white())
+      const hp = hatAt.get(i)! - (hatAt.get(i - 1) ?? 0)
+      const hat = p < 0.04 ? hp * 0.8 * (1 - p / 0.04) : 0
+      return kick(t) * 0.6 + hat
+    }
+    const fs = run(signal, 8)
+    const onsets = fs.flatMap((f, i) => (f.onset && i / FPS >= 2 ? [i] : []))
+    const isKick = (i: number) => Math.abs(i / FPS / beat - Math.round(i / FPS / beat)) * beat <= 1.5 / FPS
+    const kicks = onsets.filter(isKick)
+    const hats = onsets.filter((i) => !isKick(i))
+    expect(kicks.length).toBeGreaterThanOrEqual(11)
+    // a hat in a sparse signal is an onset too, but well below a kick
+    const mean = (xs: number[]) => xs.reduce((a, i) => a + fs[i].flux, 0) / Math.max(1, xs.length)
+    expect(mean(kicks)).toBeGreaterThan(2 * mean(hats))
+  })
+
   it('never reports two onsets closer than 100 ms', () => {
     const noise = (t: number) => Math.sin(t * 1e4 * Math.sin(t * 13)) * (Math.sin(t * 40) > 0.6 ? 1 : 0.05)
     const fs = run(noise, 6)

@@ -2,9 +2,11 @@
 //   ?demo           built-in show on a synthetic 124 BPM clock (for the showcase)
 //   (no ?demo)      follows the operator over the bus, like an output window
 //   &w=&h=          fixed size (render mode, exposes window.pagereel)
+//   &audio=<url>    drive the demo from an analysed track instead of a synthetic kick (muxed by pagereel)
 import '../../web/fonts/fonts.css'
+import { loadTrack, type Track, trackInput } from '../audio/track'
 import { fixtureValues } from '../core/fixtures'
-import { beginTransition, capture, sample } from '../core/looks'
+import { capture } from '../core/looks'
 import { strobeGate } from '../core/strobe'
 import type { Fixture, Look, Show } from '../core/types'
 import { createEngine } from '../gl/engine'
@@ -12,15 +14,13 @@ import { type Beam, beamFor, createPrevis } from '../gl/previs'
 import { fontsReady } from '../gl/text'
 import { createBus, type Live } from '../link/bus'
 import { canvasStats } from './debug'
-import { demoShow, syntheticBands } from './demo'
+import { DEMO_BPM, demoLook, demoShow, syntheticBands } from './demo'
 import { loadSaved } from './store'
 
 const q = new URLSearchParams(location.search)
 const demo = q.has('demo')
 const fixedW = Number(q.get('w')) || 0
 const fixedH = Number(q.get('h')) || 0
-const BPM = 124
-const LOOK_BEATS = 16
 
 const canvas = document.querySelector('canvas')!
 const engine = createEngine(canvas, { role: fixedW ? 'render' : 'output', readback: true })
@@ -41,15 +41,7 @@ if (!demo) {
   bus.send({ type: 'hello', role: 'output', id: 'previs' })
 }
 
-/** Demo looks change every 16 beats with a 4-beat transition: a pure function of the beat. */
-function demoLook(beat: number): Look {
-  const looks = show.looks.filter((l): l is Look => !!l)
-  const k = Math.floor(beat / LOOK_BEATS)
-  const from = looks[(k + looks.length - 1) % looks.length]
-  const to = looks[k % looks.length]
-  const base = { ...show, decks: from.decks, crossfade: from.crossfade, palette: from.palette }
-  return sample(beginTransition(base, to, k * LOOK_BEATS, 4), beat)
-}
+let track: Track | null = null
 
 function resize() {
   const dpr = fixedW ? 1 : Math.min(devicePixelRatio || 1, 2)
@@ -69,9 +61,9 @@ function render(t: number) {
   let bands: [number, number, number, number]
   let pulse: number
   if (demo || !live) {
-    beat = (t * BPM) / 60
-    look = demo ? demoLook(beat) : capture(show)
-    ;({ bands, pulse } = syntheticBands(beat))
+    beat = (t * DEMO_BPM) / 60
+    look = demo ? demoLook(show, beat) : capture(show)
+    ;({ bands, pulse } = track ? trackInput(track.table.at(t)) : syntheticBands(beat))
   } else {
     const tt = (performance.timeOrigin + performance.now() - live.epoch) / 1000
     beat = Math.max(0, ((tt - live.clock.anchor) * live.clock.bpm) / 60)
@@ -110,7 +102,7 @@ function render(t: number) {
     camera: {
       yaw: 0.42 * Math.sin(t * 0.06) + cam.yaw,
       pitch: 0.12 + 0.04 * Math.sin(t * 0.045) + cam.pitch,
-      dist: 8.4 + 0.7 * Math.sin(t * 0.05) + cam.dist,
+      dist: 7.0 + 0.5 * Math.sin(t * 0.05) + cam.dist,
     },
     width: canvas.width,
     height: canvas.height,
@@ -141,7 +133,21 @@ canvas.addEventListener(
   { passive: false },
 )
 
-const ready = fontsReady()
+const reel: Record<string, unknown> = {
+  duration: Number(q.get('dur')) || 30,
+  fps: 30,
+  width: fixedW || 1920,
+  height: fixedH || 1080,
+}
+const ready = (async () => {
+  const audio = q.get('audio')
+  if (audio) {
+    track = await loadTrack(audio, 30)
+    reel.audio = track.url
+    if (!q.get('dur')) reel.duration = Math.floor(track.duration * 30) / 30
+  }
+  await fontsReady()
+})()
 const start = performance.now()
 if (!fixedW) {
   const loop = () => {
@@ -150,14 +156,7 @@ if (!fixedW) {
   }
   void ready.then(() => requestAnimationFrame(loop))
 }
-;(window as any).pagereel = {
-  duration: 30,
-  fps: 30,
-  width: fixedW || 1920,
-  height: fixedH || 1080,
-  ready,
-  seek: (t: number) => render(t),
-}
+;(window as any).pagereel = Object.assign(reel, { ready, seek: (t: number) => render(t) })
 ;(window as any).__throw = {
   ready: true,
   stats: () => canvasStats(canvas, () => render((performance.now() - start) / 1000)),

@@ -1,7 +1,16 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
-    "includes": ["**", "!dist", "!dist-server", "!node_modules", "!media", "!demo/*.wav", "!web/fonts"]
+    "includes": [
+      "**",
+      "!dist",
+      "!dist-server",
+      "!node_modules",
+      "!media",
+      "!demo/*.wav",
+      "!demo/demo-show.json",
+      "!web/fonts"
+    ]
   },
   "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 110 },
   "javascript": { "formatter": { "quoteStyle": "single", "semicolons": "asNeeded" } },

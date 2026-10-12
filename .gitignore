@@ -4,3 +4,4 @@ dist-server
 .superpowers
 *.log
 demo/out
+demo/demo.wav

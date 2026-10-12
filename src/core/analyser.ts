@@ -11,6 +11,9 @@ const HISTORY = 60 // ~1 s of flux at 60 steps a second
 const ONSET_K = 1.5
 const MIN_GAP = 0.1 // s
 const PULSE_DECAY = 0.9
+// onset flux per band, each over its own running peak, weighted toward the low end: summed raw,
+// broadband hats outweigh the kick by 10× and the onsets land on the off-beats
+const FLUX_WEIGHTS = [1, 0.5, 0.25]
 
 export type Analyser = { step(frame: Float32Array, t: number): Features }
 
@@ -26,6 +29,7 @@ export function createAnalyser(sampleRate: number): Analyser {
   const bin = (hz: number) => Math.min(half - 1, Math.max(1, Math.round((hz * FRAME) / sampleRate)))
   const ranges = [BANDS.bass, BANDS.mid, BANDS.high].map(([lo, hi]) => [bin(lo), bin(hi)])
   const peaks = [0, 0, 0]
+  const fluxPeaks = [0, 0, 0]
   let levelPeak = 0
   const flux: number[] = []
   let lastOnset = Number.NEGATIVE_INFINITY
@@ -43,14 +47,23 @@ export function createAnalyser(sampleRate: number): Analyser {
       const rms = Math.sqrt(sum / FRAME)
       fft(re, im)
 
+      // linear magnitude: a log scale lets the broadband smear of a sound stopping dead outweigh the attack
+      const bandFlux = ranges.map(([a, b]) => {
+        let f = 0
+        for (let k = a; k <= b; k++) {
+          const m = Math.hypot(re[k], im[k])
+          const d = m - prev[k]
+          if (d > 0) f += d
+          prev[k] = m
+        }
+        return f
+      })
+      for (let i = 0; i < 3; i++) fluxPeaks[i] = Math.max(fluxPeaks[i] * PEAK_DECAY, bandFlux[i])
+      const topFlux = Math.max(...fluxPeaks)
       let fl = 0
-      for (let k = 0; k < half; k++) {
-        // linear magnitude: a log scale lets the broadband smear of a sound stopping dead outweigh the attack
-        const m = Math.hypot(re[k], im[k])
-        const d = m - prev[k]
-        if (d > 0) fl += d
-        prev[k] = m
-      }
+      for (let i = 0; i < 3; i++)
+        if (bandFlux[i] > 0)
+          fl += (FLUX_WEIGHTS[i] * bandFlux[i]) / Math.max(fluxPeaks[i], CROSS_FLOOR * topFlux)
 
       const raw = ranges.map(([a, b]) => {
         let p = 0

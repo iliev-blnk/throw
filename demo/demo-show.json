@@ -1,0 +1,696 @@
+{
+  "version": 1,
+  "master": {
+    "brightness": 1,
+    "blackout": false,
+    "strobe": 0,
+    "hue": 0
+  },
+  "decks": [
+    {
+      "scene": "raze",
+      "params": [
+        0.55,
+        0.4,
+        0.5,
+        0.15,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "scene": "scan",
+      "params": [
+        0.35,
+        0.2,
+        0.4,
+        0.3,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ]
+    }
+  ],
+  "crossfade": 0,
+  "palette": [
+    [
+      1,
+      0.55,
+      0.12
+    ],
+    [
+      0.16,
+      0.22,
+      0.95
+    ],
+    [
+      1,
+      0.97,
+      0.9
+    ]
+  ],
+  "looks": [
+    {
+      "decks": [
+        {
+          "scene": "raze",
+          "params": [
+            0.55,
+            0.4,
+            0.5,
+            0.15,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "scene": "scan",
+          "params": [
+            0.35,
+            0.2,
+            0.4,
+            0.3,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      ],
+      "crossfade": 0,
+      "palette": [
+        [
+          1,
+          0.55,
+          0.12
+        ],
+        [
+          0.16,
+          0.22,
+          0.95
+        ],
+        [
+          1,
+          0.97,
+          0.9
+        ]
+      ],
+      "master": {
+        "brightness": 1,
+        "hue": 0
+      }
+    },
+    {
+      "decks": [
+        {
+          "scene": "raze",
+          "params": [
+            0.55,
+            0.4,
+            0.5,
+            0.15,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "scene": "scan",
+          "params": [
+            0.35,
+            0.2,
+            0.4,
+            0.3,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      ],
+      "crossfade": 1,
+      "palette": [
+        [
+          0.35,
+          0.75,
+          1
+        ],
+        [
+          0.05,
+          0.08,
+          0.5
+        ],
+        [
+          0.95,
+          0.98,
+          1
+        ]
+      ],
+      "master": {
+        "brightness": 1,
+        "hue": 0
+      }
+    },
+    {
+      "decks": [
+        {
+          "scene": "hilbert",
+          "params": [
+            0.5,
+            0.5,
+            0.4,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "scene": "grid",
+          "params": [
+            0.4,
+            0.5,
+            0.5,
+            0.2,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      ],
+      "crossfade": 0,
+      "palette": [
+        [
+          0.75,
+          1,
+          0.1
+        ],
+        [
+          0.05,
+          0.35,
+          0.3
+        ],
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "master": {
+        "brightness": 1,
+        "hue": 0
+      }
+    },
+    {
+      "decks": [
+        {
+          "scene": "smoke",
+          "params": [
+            0.4,
+            0.3,
+            0.5,
+            0.6,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "scene": "type",
+          "params": [
+            0.6,
+            0.7,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      ],
+      "crossfade": 1,
+      "palette": [
+        [
+          1,
+          0.12,
+          0.08
+        ],
+        [
+          0.35,
+          0,
+          0.12
+        ],
+        [
+          1,
+          0.85,
+          0.75
+        ]
+      ],
+      "master": {
+        "brightness": 1,
+        "hue": 0
+      }
+    },
+    {
+      "decks": [
+        {
+          "scene": "smoke",
+          "params": [
+            0.4,
+            0.3,
+            0.5,
+            0.6,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "scene": "scan",
+          "params": [
+            0.35,
+            0.2,
+            0.4,
+            0.3,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      ],
+      "crossfade": 0,
+      "palette": [
+        [
+          0.35,
+          0.75,
+          1
+        ],
+        [
+          0.05,
+          0.08,
+          0.5
+        ],
+        [
+          0.95,
+          0.98,
+          1
+        ]
+      ],
+      "master": {
+        "brightness": 1,
+        "hue": 0
+      }
+    },
+    {
+      "decks": [
+        {
+          "scene": "grid",
+          "params": [
+            0.4,
+            0.5,
+            0.5,
+            0.2,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "scene": "type",
+          "params": [
+            0.6,
+            0.7,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      ],
+      "crossfade": 1,
+      "palette": [
+        [
+          1,
+          0.55,
+          0.12
+        ],
+        [
+          0.16,
+          0.22,
+          0.95
+        ],
+        [
+          1,
+          0.97,
+          0.9
+        ]
+      ],
+      "master": {
+        "brightness": 1,
+        "hue": 0
+      }
+    },
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "outputs": [
+    {
+      "id": "o1",
+      "name": "Wall + boxes",
+      "surfaces": [
+        {
+          "id": "wall",
+          "slice": {
+            "x": 0,
+            "y": 0,
+            "w": 1,
+            "h": 1
+          },
+          "corners": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "feather": 0,
+          "brightness": 1,
+          "enabled": true
+        },
+        {
+          "id": "box1",
+          "slice": {
+            "x": 0,
+            "y": 0.25,
+            "w": 0.33,
+            "h": 0.5
+          },
+          "corners": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "feather": 0,
+          "brightness": 1,
+          "enabled": true
+        },
+        {
+          "id": "box2",
+          "slice": {
+            "x": 0.33,
+            "y": 0.2,
+            "w": 0.34,
+            "h": 0.6
+          },
+          "corners": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "feather": 0,
+          "brightness": 1,
+          "enabled": true
+        },
+        {
+          "id": "box3",
+          "slice": {
+            "x": 0.67,
+            "y": 0.25,
+            "w": 0.33,
+            "h": 0.5
+          },
+          "corners": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "feather": 0,
+          "brightness": 1,
+          "enabled": true
+        }
+      ],
+      "testCard": false
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "m1",
+      "name": "mover 1",
+      "profile": "mover",
+      "universe": 0,
+      "address": 1,
+      "x": 0.1,
+      "y": 0.1,
+      "group": "movers",
+      "mode": "pixel",
+      "color": [
+        1,
+        1,
+        1
+      ],
+      "pattern": {
+        "kind": "circle",
+        "size": 0.4,
+        "centre": [
+          0.5,
+          0.62
+        ],
+        "speed": 0.5
+      }
+    },
+    {
+      "id": "m2",
+      "name": "mover 2",
+      "profile": "mover",
+      "universe": 0,
+      "address": 10,
+      "x": 0.367,
+      "y": 0.1,
+      "group": "movers",
+      "mode": "pixel",
+      "color": [
+        1,
+        1,
+        1
+      ],
+      "pattern": {
+        "kind": "figure8",
+        "size": 0.4,
+        "centre": [
+          0.5,
+          0.62
+        ],
+        "speed": 0.5
+      }
+    },
+    {
+      "id": "m3",
+      "name": "mover 3",
+      "profile": "mover",
+      "universe": 0,
+      "address": 19,
+      "x": 0.634,
+      "y": 0.1,
+      "group": "movers",
+      "mode": "pixel",
+      "color": [
+        1,
+        1,
+        1
+      ],
+      "pattern": {
+        "kind": "circle",
+        "size": 0.4,
+        "centre": [
+          0.5,
+          0.62
+        ],
+        "speed": 0.5
+      }
+    },
+    {
+      "id": "m4",
+      "name": "mover 4",
+      "profile": "mover",
+      "universe": 0,
+      "address": 28,
+      "x": 0.901,
+      "y": 0.1,
+      "group": "movers",
+      "mode": "pixel",
+      "color": [
+        1,
+        1,
+        1
+      ],
+      "pattern": {
+        "kind": "figure8",
+        "size": 0.4,
+        "centre": [
+          0.5,
+          0.62
+        ],
+        "speed": 0.5
+      }
+    },
+    {
+      "id": "p1",
+      "name": "par 1",
+      "profile": "rgb",
+      "universe": 0,
+      "address": 37,
+      "x": 0.08,
+      "y": 0.92,
+      "group": "pars",
+      "mode": "pixel",
+      "color": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "p2",
+      "name": "par 2",
+      "profile": "rgb",
+      "universe": 0,
+      "address": 40,
+      "x": 0.36000000000000004,
+      "y": 0.92,
+      "group": "pars",
+      "mode": "pixel",
+      "color": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "p3",
+      "name": "par 3",
+      "profile": "rgb",
+      "universe": 0,
+      "address": 43,
+      "x": 0.64,
+      "y": 0.92,
+      "group": "pars",
+      "mode": "pixel",
+      "color": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "p4",
+      "name": "par 4",
+      "profile": "rgb",
+      "universe": 0,
+      "address": 46,
+      "x": 0.92,
+      "y": 0.92,
+      "group": "pars",
+      "mode": "pixel",
+      "color": [
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "settings": {
+    "masterW": 1920,
+    "masterH": 1080,
+    "sceneScale": 0.75,
+    "strobeCap": 10,
+    "transitionBeats": 4,
+    "autopilot": {
+      "on": true,
+      "bars": 4,
+      "random": false
+    },
+    "artnetTarget": "2.255.255.255",
+    "text": "throw",
+    "words": [
+      "THROW",
+      "LIGHT",
+      "ROOM",
+      "NIGHT",
+      "SOUND",
+      "WALL"
+    ]
+  }
+}

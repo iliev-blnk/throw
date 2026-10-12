@@ -215,7 +215,7 @@ function frame() {
         const b = v && beamFor(f, v)
         return b ? [b] : []
       }),
-      camera: { yaw: 0.35 * Math.sin(rt.state.t * 0.06), pitch: 0.14, dist: 8.6 },
+      camera: { yaw: 0.35 * Math.sin(rt.state.t * 0.06), pitch: 0.14, dist: 7.2 },
       width: canvas.width,
       height: canvas.height,
     })
