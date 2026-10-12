@@ -15,7 +15,7 @@
     "node": ">=20"
   },
   "bin": {
-    "throw": "dist-server/cli.js"
+    "throw": "dist-server/server/cli.js"
   },
   "files": [
     "dist",
@@ -24,12 +24,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && tsc -p tsconfig.server.json",
-    "start": "pnpm build && node dist-server/cli.js --open",
+    "start": "pnpm build && node dist-server/server/cli.js --open",
     "test": "vitest run",
     "test:e2e": "vitest run -c vitest.e2e.config.ts",
     "lint": "biome check .",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.server.json --noEmit",
-    "check": "biome check . && tsc --noEmit && vitest run"
+    "check": "biome check . && tsc --noEmit && vitest run",
+    "serve": "node dist-server/server/cli.js"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.15",
