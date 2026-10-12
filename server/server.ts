@@ -70,7 +70,9 @@ export async function startServer(opts: ServerOptions) {
       bridge.close()
       for (const c of wss.clients) c.terminate()
       wss.close()
-      await new Promise<void>((ok) => server.close(() => ok()))
+      const closed = new Promise<void>((ok) => server.close(() => ok()))
+      server.closeAllConnections() // long-polls from the remote would otherwise hold close() open
+      await closed
     },
   }
 }

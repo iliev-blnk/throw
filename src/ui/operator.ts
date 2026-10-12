@@ -10,9 +10,12 @@ import { imageElement, mediaElement } from './media'
 import { audioPanel } from './panels/audio'
 import { decksPanel, type MediaControl } from './panels/decks'
 import { lightsPanel } from './panels/lights'
+import { looksPanel } from './panels/looks'
 import { mappingPanel, updateSurface } from './panels/mapping'
 import { masterPanel } from './panels/master'
+import { remotePanel } from './panels/remote'
 import { toolsPanel } from './panels/tools'
+import { startRemote } from './remote'
 import { createRuntime } from './runtime'
 import { createStore, loadSaved } from './store'
 
@@ -24,6 +27,10 @@ const canvas = h('canvas', { id: 'program' })
 const engine = createEngine(canvas, { role: 'operator' })
 const rt = createRuntime(store, engine, bus)
 const lights = createLights(store, engine, rt)
+let remote: Awaited<ReturnType<typeof startRemote>> | undefined
+void startRemote(store, rt).then((r) => {
+  remote = r
+})
 rt.onPanic(() => lights.panic())
 
 // media files live here; outputs get them over the bus
@@ -84,7 +91,9 @@ const mapping = mappingPanel(store, rt)
 const tabs: Tab[] = [
   { id: 'audio', label: 'audio', el: audio.el, frame: audio.frame },
   { id: 'outputs', label: 'outputs', el: mapping.el, frame: mapping.frame },
+  { id: 'looks', label: 'looks', ...looksPanel(store, rt) },
   { id: 'lights', label: 'lights', ...lightsPanel(store, lights) },
+  { id: 'remote', label: 'remote', ...remotePanel(() => remote) },
   { id: 'tools', label: 'tools', el: toolsPanel() },
 ]
 const tabBar = h('nav', { class: 'tabs' })
@@ -191,6 +200,7 @@ bus.send({ type: 'state', show: store.get() })
   engine,
   runtime: rt,
   lights,
+  remote: () => remote,
   show: () => store.get(),
   stats: () => canvasStats(canvas, () => rt.render()),
 }

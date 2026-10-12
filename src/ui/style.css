@@ -360,3 +360,17 @@ th {
 .patch td {
   white-space: nowrap;
 }
+.slots {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+}
+.slot {
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slot.empty {
+  color: var(--dim);
+}
