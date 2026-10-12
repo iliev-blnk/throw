@@ -331,3 +331,32 @@ th {
 .name {
   color: var(--dim);
 }
+
+.scroll {
+  overflow-x: auto;
+}
+.patch input[type="number"] {
+  width: 5em;
+}
+.patch input[type="text"] {
+  min-width: 7em;
+}
+.vis,
+.monitor {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: #000;
+}
+.vis {
+  aspect-ratio: 16 / 9;
+}
+.monitor {
+  aspect-ratio: 4 / 1;
+  image-rendering: pixelated;
+}
+.patch select {
+  min-width: 7.5em;
+}
+.patch td {
+  white-space: nowrap;
+}

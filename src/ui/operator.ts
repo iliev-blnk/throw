@@ -5,9 +5,11 @@ import { createEngine } from '../gl/engine'
 import { createBus } from '../link/bus'
 import { canvasStats } from './debug'
 import { clear, h } from './h'
+import { createLights } from './lights'
 import { imageElement, mediaElement } from './media'
 import { audioPanel } from './panels/audio'
 import { decksPanel, type MediaControl } from './panels/decks'
+import { lightsPanel } from './panels/lights'
 import { mappingPanel, updateSurface } from './panels/mapping'
 import { masterPanel } from './panels/master'
 import { toolsPanel } from './panels/tools'
@@ -21,6 +23,8 @@ const bus = createBus()
 const canvas = h('canvas', { id: 'program' })
 const engine = createEngine(canvas, { role: 'operator' })
 const rt = createRuntime(store, engine, bus)
+const lights = createLights(store, engine, rt)
+rt.onPanic(() => lights.panic())
 
 // media files live here; outputs get them over the bus
 const blobs: {
@@ -71,6 +75,7 @@ store.on((show) => {
 // ── layout ──────────────────────────────────────────────
 const beatDots = [0, 1, 2, 3].map(() => h('i'))
 const bpmLabel = h('span', { class: 'bpm' })
+const serverLabel = h('span', { class: 'server' })
 const decks = decksPanel(store, media)
 const master = masterPanel(store, () => rt.toggleBlackout())
 const audio = audioPanel(rt)
@@ -79,6 +84,7 @@ const mapping = mappingPanel(store, rt)
 const tabs: Tab[] = [
   { id: 'audio', label: 'audio', el: audio.el, frame: audio.frame },
   { id: 'outputs', label: 'outputs', el: mapping.el, frame: mapping.frame },
+  { id: 'lights', label: 'lights', ...lightsPanel(store, lights) },
   { id: 'tools', label: 'tools', el: toolsPanel() },
 ]
 const tabBar = h('nav', { class: 'tabs' })
@@ -113,6 +119,7 @@ document.body.append(
     h('span', { class: 'beats' }, ...beatDots),
     h('button', { text: 'tap', onclick: () => rt.tap() }),
     h('button', { text: 'beat 1', onclick: () => rt.resync() }),
+    serverLabel,
   ),
   h(
     'main',
@@ -161,6 +168,13 @@ function frame() {
   tabs.find((t) => t.id === current)?.frame?.()
   rt.step()
   rt.render()
+  lights.frame()
+  serverLabel.textContent = {
+    checking: '',
+    none: 'no server',
+    offline: 'server offline',
+    online: 'server online',
+  }[lights.status()]
   const b = rt.state.beat
   bpmLabel.textContent = `${rt.state.clock.bpm.toFixed(1)} BPM`
   beatDots.forEach((d, i) => {
@@ -176,6 +190,7 @@ bus.send({ type: 'state', show: store.get() })
   store,
   engine,
   runtime: rt,
+  lights,
   show: () => store.get(),
   stats: () => canvasStats(canvas, () => rt.render()),
 }
