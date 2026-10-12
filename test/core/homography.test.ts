@@ -24,7 +24,9 @@ describe('homography', () => {
   it('maps the unit square corners exactly onto a convex quad', () => {
     const H = solveHomography(QUAD)!
     expect(H).not.toBeNull()
-    UNIT.forEach((p, i) => close(apply(H, p), QUAD[i]))
+    UNIT.forEach((p, i) => {
+      close(apply(H, p), QUAD[i])
+    })
   })
 
   it('maps the centre of a square to its centre', () => {
@@ -39,7 +41,9 @@ describe('homography', () => {
 
   it('inverts back to the unit square', () => {
     const Hi = invert3(solveHomography(QUAD)!)!
-    QUAD.forEach((p, i) => close(apply(Hi, p), UNIT[i], 1e-7))
+    QUAD.forEach((p, i) => {
+      close(apply(Hi, p), UNIT[i], 1e-7)
+    })
   })
 
   it('returns null when three corners are collinear', () => {
