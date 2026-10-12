@@ -303,3 +303,31 @@ th {
 th {
   color: var(--dim);
 }
+
+.output {
+  border: 1px solid var(--line);
+  padding: 8px;
+  display: grid;
+  gap: 6px;
+}
+.outputs {
+  display: grid;
+  gap: 8px;
+}
+.surface-editor {
+  display: grid;
+  gap: 8px;
+}
+.schematic {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line);
+  touch-action: none;
+  cursor: crosshair;
+}
+.schematic:focus {
+  outline: 1px solid var(--on);
+}
+.name {
+  color: var(--dim);
+}

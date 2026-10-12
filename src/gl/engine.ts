@@ -130,6 +130,7 @@ export function createEngine(canvas: HTMLCanvasElement, opts: { role: Role }): E
   void fontsReady().then(() => {
     fonts = true
     texts.clear()
+    cards.clear() // redraw test cards with the real face
   })
   const texts = new Map<string, TextTex>()
   const cards = new Map<string, WebGLTexture>()

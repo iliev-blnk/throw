@@ -8,7 +8,9 @@ import { clear, h } from './h'
 import { imageElement, mediaElement } from './media'
 import { audioPanel } from './panels/audio'
 import { decksPanel, type MediaControl } from './panels/decks'
+import { mappingPanel, updateSurface } from './panels/mapping'
 import { masterPanel } from './panels/master'
+import { toolsPanel } from './panels/tools'
 import { createRuntime } from './runtime'
 import { createStore, loadSaved } from './store'
 
@@ -42,6 +44,15 @@ const media: MediaControl = {
   },
 }
 
+// corners dragged on the wall, in an output window
+bus.on((m) => {
+  if (m.type !== 'corner') return
+  updateSurface(store, m.output, m.surface, (s) => {
+    s.corners[m.index] = [m.x, m.y]
+    return s
+  })
+})
+
 // outputs ask for everything when they open
 bus.on((m) => {
   if (m.type !== 'hello' || m.role !== 'output') return
@@ -64,7 +75,12 @@ const decks = decksPanel(store, media)
 const master = masterPanel(store, () => rt.toggleBlackout())
 const audio = audioPanel(rt)
 
-const tabs: Tab[] = [{ id: 'audio', label: 'audio', el: audio.el, frame: audio.frame }]
+const mapping = mappingPanel(store, rt)
+const tabs: Tab[] = [
+  { id: 'audio', label: 'audio', el: audio.el, frame: audio.frame },
+  { id: 'outputs', label: 'outputs', el: mapping.el, frame: mapping.frame },
+  { id: 'tools', label: 'tools', el: toolsPanel() },
+]
 const tabBar = h('nav', { class: 'tabs' })
 const tabBody = h('div', { class: 'tabbody' })
 let current = 'audio'
@@ -141,6 +157,8 @@ new ResizeObserver(resize).observe(canvas)
 resize()
 
 function frame() {
+  rt.state.edit = null // the outputs tab sets it again while it is open
+  tabs.find((t) => t.id === current)?.frame?.()
   rt.step()
   rt.render()
   const b = rt.state.beat
@@ -148,7 +166,6 @@ function frame() {
   beatDots.forEach((d, i) => {
     d.classList.toggle('on', Math.floor(b) % 4 === i)
   })
-  tabs.find((t) => t.id === current)?.frame?.()
   requestAnimationFrame(frame)
 }
 requestAnimationFrame(frame)

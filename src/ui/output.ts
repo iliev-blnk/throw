@@ -69,6 +69,39 @@ function frame() {
 }
 requestAnimationFrame(frame)
 
+// edit mode: drag the selected surface's corners on the wall
+let drag: { surface: string; index: number } | null = null
+canvas.addEventListener('pointerdown', (e) => {
+  const edit = live?.edit?.output === id ? live.edit : null
+  const out = show.outputs.find((o) => o.id === id)
+  if (!edit || !out) return
+  let best: typeof drag = null
+  let bestD = 40
+  for (const s of out.surfaces) {
+    if (!edit.surfaces.includes(s.id)) continue
+    s.corners.forEach(([x, y], i) => {
+      const d = Math.hypot(x * innerWidth - e.clientX, y * innerHeight - e.clientY)
+      if (d < bestD) {
+        bestD = d
+        best = { surface: s.id, index: i }
+      }
+    })
+  }
+  drag = best
+  if (drag) canvas.setPointerCapture(e.pointerId)
+})
+canvas.addEventListener('pointermove', (e) => {
+  if (!drag) return
+  const x = e.clientX / innerWidth
+  const y = e.clientY / innerHeight
+  const surf = show.outputs.find((o) => o.id === id)?.surfaces.find((s) => s.id === drag!.surface)
+  if (surf) surf.corners[drag.index] = [x, y] // show the move at once; the operator's state follows
+  bus.send({ type: 'corner', output: id, surface: drag.surface, index: drag.index, x, y })
+})
+canvas.addEventListener('pointerup', () => {
+  drag = null
+})
+
 addEventListener('keydown', (e) => {
   if (e.key === 'f' || e.key === 'F') {
     if (document.fullscreenElement) void document.exitFullscreen()

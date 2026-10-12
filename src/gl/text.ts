@@ -4,10 +4,12 @@ export const DISPLAY_FONT = 'Unbounded'
 const SIZE = 360
 
 let ready: Promise<void> | null = null
-/** Resolves once the display font is loaded (or failed to load, then a fallback face is used). */
+/** Resolves once the display and UI fonts are loaded (or failed to load, then a fallback face is used). */
 export function fontsReady(): Promise<void> {
-  ready ??= document.fonts
-    .load(`900 ${SIZE}px ${DISPLAY_FONT}`, 'AȘțЖ')
+  ready ??= Promise.all([
+    document.fonts.load(`900 ${SIZE}px ${DISPLAY_FONT}`, 'AȘțЖ'),
+    document.fonts.load(`600 40px 'IBM Plex Mono'`, 'Output 1'),
+  ])
     .then(() => undefined)
     .catch(() => undefined)
   return ready
